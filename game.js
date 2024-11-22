@@ -137,7 +137,7 @@ let axeY =2 ;
 
 // The location of board
 
-let boardY = height - (height/3);
+let boardY = 500;
 let boardX = width/2;
 
 // The location of treasureChest
@@ -164,7 +164,7 @@ function draw(){
 //The move of board
 
 board(boardX-40,boardY);
-if(keyIsDown(39) && boardX +40 <= 500){
+if(keyIsDown(39) && boardX +40 <= 800){
 boardX += 5;
 }else if (keyIsDown(37) && boardX - 40 >= 0){
   boardX -= 5;
@@ -176,11 +176,11 @@ axeY += dropSpeed;
 axeX += bounceSpeed;
 if(axeY+ axeWidth >= boardY && axeX + axeWidth/2 >= boardX -40 && axeX - axeWidth/2<= boardX +40){
   dropSpeed = dropSpeed * -1;
-}else if (axeY <= 0 || axeY + axeWidth>= 400){
+}else if (axeY <= 0 || axeY + axeWidth>= 600){
   dropSpeed = dropSpeed * -1;
 }
 axeX += bounceSpeed;
-if(axeX + axeWidth >= 500 || axeX - axeWidth/2 <= 0){
+if(axeX + axeWidth >= 800 || axeX - axeWidth/2 <= 0){
   bounceSpeed = bounceSpeed * -1;
 }
 
