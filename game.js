@@ -1,3 +1,7 @@
+// let backgroundImage;
+// function preload() {
+//   backgroundImage = loadImage("background.jpg");
+// }
 function setup() {
   createCanvas(800, 600);
 }
@@ -6,7 +10,6 @@ function draw() {
   background(255, 140, 0);
 }
 //The axe code
-
 function handle(x, y) {
   push();
   translate(x, y);
@@ -110,7 +113,7 @@ function treasure(x, y) {
   vertex(+8, +8);
   vertex(-8, +8);
   vertex(-10, -2);
-  endShape(CLOSE);
+  endShape();
   rect(-34, -40, 68, 30, 20, 20, 0);
   for (let q = 0; q < 3; q++) {
     stroke(127, 122, 115);
@@ -151,6 +154,7 @@ for (let i = 0; i < 5; i++) {
 
 function draw() {
   background(240, 240, 240);
+
   push();
   translate(axeX, axeY);
   rotate(angle);
