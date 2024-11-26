@@ -5,11 +5,6 @@
 function setup() {
   createCanvas(800, 600);
 }
-
-function draw() {
-  background(255, 140, 0);
-}
-//The axe code
 function handle(x, y) {
   push();
   translate(x, y);
@@ -75,9 +70,6 @@ function axe(x, y) {
   ellipse(x, y, 380);
   pop();
 }
-
-// The board code
-
 function board(X, Y) {
   fill(139, 69, 19);
   noStroke();
@@ -90,8 +82,6 @@ function board(X, Y) {
   ellipse(boardX - 39, boardY + 5, 6);
   ellipse(boardX - 39, boardY + 5, 3);
 }
-
-// The code of the treasureChest
 function treasure(x, y) {
   push();
   translate(x, y);
@@ -129,7 +119,6 @@ function treasure(x, y) {
 }
 
 // The rotation and bounce of the axe
-
 let angle = 0;
 let dropSpeed = 3;
 let bounceSpeed = 3;
@@ -138,23 +127,16 @@ let axeX = 100;
 let axeY = 2;
 
 // The location of board
-
 let boardY = 500;
 let boardX = width / 2;
 
 // The location of treasureChest
 let treasureWidth = 40;
-treasureChests = [];
-for (let i = 0; i < 5; i++) {
-  treasureChests.push({
-    x: random(treasureWidth, width - treasureWidth),
-    y: random(treasureWidth, height / 2),
-  });
-}
 
 function draw() {
   background(240, 240, 240);
 
+  // The Rotation of the axe
   push();
   translate(axeX, axeY);
   rotate(angle);
@@ -164,7 +146,6 @@ function draw() {
   pop();
 
   //The move of board
-
   board(boardX - 40, boardY);
   if (keyIsDown(39) && boardX + 40 <= 800) {
     boardX += 5;
@@ -173,7 +154,6 @@ function draw() {
   }
 
   //The bounce of the axe
-
   axeY += dropSpeed;
   axeX += bounceSpeed;
   if (
@@ -192,7 +172,4 @@ function draw() {
 
   // the loaction of the treasureChest
 
-  for (let i = 0; i < treasureChests.length; i++) {
-    treasure(treasureChests[i].x, treasureChests[i].y);
-  }
 }
