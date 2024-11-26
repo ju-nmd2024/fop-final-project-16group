@@ -163,6 +163,7 @@ function drawTreasure(x, y) {
   pop();
 }
 function draw() {
+  //The skt and the star
   noStroke();
   background(0,0,0);
   for(let index in starX){
