@@ -110,7 +110,7 @@ function axe(x, y) {
   ellipse(x, y + 127, 5);
   ellipse(x, y + 140, 5);
   noFill();
-  stroke(0);
+  stroke(255);
   strokeWeight(5);
   ellipse(x, y, 380);
   pop();
