@@ -1,9 +1,42 @@
-// let backgroundImage;
-// function preload() {
-//   backgroundImage = loadImage("background.jpg");
-// }
+
+// The location of treasureChest
+let treasureWidth = 40;
+let treasures = [];
+let treasureX = 100;
+let treasureY = 100;
+
+// The rotation and bounce of the axe
+let angle = 0;
+let dropSpeed = 3;
+let bounceSpeed = 3;
+let axeWidth = 20;
+let axeX = 100;
+let axeY = 2;
+
+// The location of board
+let boardY = 500;
+let boardX = width / 2;
+
 function setup() {
   createCanvas(800, 600);
+
+  //Store the location and status of each treasure chest
+let rows = 3;
+let cols = 7;
+// The location and spacing of the first treasure chest
+let startX = 100;
+let startY = 100;
+let gap = 100;
+
+for (let row = 0; row<rows; row++){
+  for( let col = 0; col<cols; col++){
+    treasures.push({
+      x:startX + col * gap,
+      y:startY + row * gap,
+      exists: true,
+    });
+  }
+}
 }
 function handle(x, y) {
   push();
@@ -82,7 +115,7 @@ function board(X, Y) {
   ellipse(boardX - 39, boardY + 5, 6);
   ellipse(boardX - 39, boardY + 5, 3);
 }
-function treasure(x, y) {
+function drawTreasure(x, y) {
   push();
   translate(x, y);
   scale(0.5);
@@ -117,22 +150,6 @@ function treasure(x, y) {
   rect(-1.5, 0, 3, 6);
   pop();
 }
-
-// The rotation and bounce of the axe
-let angle = 0;
-let dropSpeed = 3;
-let bounceSpeed = 3;
-let axeWidth = 10;
-let axeX = 100;
-let axeY = 2;
-
-// The location of board
-let boardY = 500;
-let boardX = width / 2;
-
-// The location of treasureChest
-let treasureWidth = 40;
-
 function draw() {
   background(240, 240, 240);
 
@@ -157,10 +174,14 @@ function draw() {
   axeY += dropSpeed;
   axeX += bounceSpeed;
   if (
-    axeY + axeWidth >= boardY &&
-    axeX + axeWidth / 2 >= boardX - 40 &&
-    axeX - axeWidth / 2 <= boardX + 40
+    axeY + axeWidth / 2 > boardY &&
+    axeX + axeWidth / 2 > boardX - 40 &&
+    axeX - axeWidth / 2 < boardX + 40 &&
+    axeY - axeWidth / 2 < boardY +10
   ) {
+    if(dropSpeed > 0){
+      axeY = boardY - axeWidth/2;
+    }
     dropSpeed = dropSpeed * -1;
   } else if (axeY <= 0 || axeY + axeWidth >= 600) {
     dropSpeed = dropSpeed * -1;
@@ -170,6 +191,19 @@ function draw() {
     bounceSpeed = bounceSpeed * -1;
   }
 
-  // the loaction of the treasureChest
-
+  // Treasure chest and collision detection
+  for(let i=0; i<treasures.length; i++){
+    let treasure = treasures[i];
+    if(treasure.exists){
+      if (axeX + axeWidth / 2 > treasure.x - treasureWidth / 2 &&
+        axeX - axeWidth / 2 < treasure.x + treasureWidth / 2 &&
+        axeY + axeWidth / 2 > treasure.y - treasureWidth / 2 &&
+        axeY - axeWidth / 2 < treasure.y + treasureWidth / 2){
+          
+          treasure.exists = false;
+        }else{
+          drawTreasure(treasure.x,treasure.y);
+        }
+    }
+  }
 }
