@@ -268,7 +268,6 @@ function draw() {
         axeX - axeWidth / 2 < meteorite.x + meteoriteWidth / 2 &&
         axeY + axeWidth / 2 > meteorite.y - meteoriteWidth / 2 &&
         axeY - axeWidth / 2 < meteorite.y + meteoriteWidth / 2){ 
-
            meteorite.isFalling = true; 
 
           //Rebound logic
@@ -287,7 +286,7 @@ function draw() {
         }else{
           drawMeteorite(meteorite.x,meteorite.y);
         }
-        if(meteorite.isFalling){
+        if(meteorite.isFalling){ // The meteorite is Falling
           meteorite.y += 3;
           drawMeteorite(meteorite.x,meteorite.y);
         }
