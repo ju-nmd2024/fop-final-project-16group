@@ -17,6 +17,11 @@ let axeY = 2;
 let boardY = 500;
 let boardX = width / 2;
 
+// The sky and stars
+let starX = [];
+let starY = [];
+let starAlpha = [];
+
 function setup() {
   createCanvas(800, 600);
 
@@ -28,6 +33,13 @@ let startX = 100;
 let startY = 100;
 let gap = 100;
 
+// Initialize stars' positions and their alpha values
+
+for (let i = 0; i < 100; i++) {
+  starX.push(random(800));
+  starY.push(random(350));
+  starAlpha.push(random(TWO_PI));
+}
 for (let row = 0; row<rows; row++){
   for( let col = 0; col<cols; col++){
     treasures.push({
@@ -151,7 +163,13 @@ function drawTreasure(x, y) {
   pop();
 }
 function draw() {
-  background(240, 240, 240);
+  noStroke();
+  background(0,0,0);
+  for(let index in starX){
+      fill(255,255,255,Math.abs(Math.sin(starAlpha[index]))*255);
+      ellipse(starX[index],starY[index],3);
+      starAlpha[index] = starAlpha[index] + 0.04;
+  }
 
   // The Rotation of the axe
   push();
@@ -206,4 +224,5 @@ function draw() {
         }
     }
   }
+
 }
