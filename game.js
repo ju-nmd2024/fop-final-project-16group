@@ -42,7 +42,7 @@ let meteoriteX = 150;
 let meteoriteY = 100;
 for (let row = 0; row<rows; row++){
   for( let col = 0; col<cols; col++){
-    treasures.push({
+      treasures.push({
       x:startX + col * gap,
       y:startY + row * rowGap,
       exists: true,
@@ -53,6 +53,7 @@ for (let row = 0; row<rows; row++){
       x:meteoriteX + col * gap,
       y:meteoriteY + row * rowGap,
       exists: true,
+      isFalling : false,
     });
   }
 }
@@ -267,7 +268,9 @@ function draw() {
         axeX - axeWidth / 2 < meteorite.x + meteoriteWidth / 2 &&
         axeY + axeWidth / 2 > meteorite.y - meteoriteWidth / 2 &&
         axeY - axeWidth / 2 < meteorite.y + meteoriteWidth / 2){ 
-          meteorite.exists = false;
+
+           meteorite.isFalling = true; 
+
           //Rebound logic
           // X direction of motion
           if(axeX < meteorite.x){
@@ -282,6 +285,10 @@ function draw() {
             dropSpeed = Math.abs(dropSpeed);//Make sure to go down
           }
         }else{
+          drawMeteorite(meteorite.x,meteorite.y);
+        }
+        if(meteorite.isFalling){
+          meteorite.y += 3;
           drawMeteorite(meteorite.x,meteorite.y);
         }
     }
