@@ -1,4 +1,9 @@
+//The next code form LIU
+//score and lives
+let score = 0;
+let lives = 3;
 
+//The next code form YAN
 // The setting of treasureChest
 let treasureWidth = 40;
 let treasures = [];
@@ -28,42 +33,42 @@ function setup() {
   createCanvas(800, 600);
 
   //The location and status of each treasure chest and meteorite
-let rows = 4;
-let cols = 7;
+  let rows = 4;
+  let cols = 7;
 
-// The location and spacing of the first treasure chest
-let startX = 100;
-let startY = 100;
-let gap = 100;
-let rowGap = 50;
+  // The location and spacing of the first treasure chest
+  let startX = 100;
+  let startY = 100;
+  let gap = 100;
+  let rowGap = 50;
 
-// The location and spacing of the treasure and meteorite
-let meteoriteX = 150;
-let meteoriteY = 100;
-for (let row = 0; row<rows; row++){
-  for( let col = 0; col<cols; col++){
+  // The location and spacing of the treasure and meteorite
+  let meteoriteX = 150;
+  let meteoriteY = 100;
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
       treasures.push({
-      x:startX + col * gap,
-      y:startY + row * rowGap,
-      exists: true,
-    });
+        x: startX + col * gap,
+        y: startY + row * rowGap,
+        exists: true,
+      });
+    }
+    for (let col = 0; col < cols; col++) {
+      meteorites.push({
+        x: meteoriteX + col * gap,
+        y: meteoriteY + row * rowGap,
+        exists: true,
+        isFalling: false,
+      });
+    }
   }
-  for( let col = 0; col<cols; col++){
-    meteorites.push({
-      x:meteoriteX + col * gap,
-      y:meteoriteY + row * rowGap,
-      exists: true,
-      isFalling : false,
-    });
-  }
-}
 
-// Initialize stars' positions and their alpha values
-for (let i = 0; i < 150; i++) {
-  starX.push(random(800));
-  starY.push(random(460));
-  starAlpha.push(random());
-}
+  // Initialize stars' positions and their alpha values
+  for (let i = 0; i < 150; i++) {
+    starX.push(random(800));
+    starY.push(random(460));
+    starAlpha.push(random());
+  }
 }
 function handle(x, y) {
   push();
@@ -177,30 +182,30 @@ function drawTreasure(x, y) {
   rect(-1.5, 0, 3, 6);
   pop();
 }
-function drawMeteorite(x,y){
+function drawMeteorite(x, y) {
   push();
-  translate(x,y);
+  translate(x, y);
   scale(0.5);
-  translate(-x,-y);
-  fill(211,211,211);
-  ellipse(x,y,80,70);
-  fill(69,69);
+  translate(-x, -y);
+  fill(211, 211, 211);
+  ellipse(x, y, 80, 70);
+  fill(69, 69);
   strokeWeight(2);
-  ellipse(x,y-20,20,10);
-  ellipse(x-20,y+10,15,10);
-  ellipse(x+20,y-10,10);
-  ellipse(x+10,y+10,15);
-  ellipse(x-20,y-10,5);
+  ellipse(x, y - 20, 20, 10);
+  ellipse(x - 20, y + 10, 15, 10);
+  ellipse(x + 20, y - 10, 10);
+  ellipse(x + 10, y + 10, 15);
+  ellipse(x - 20, y - 10, 5);
   pop();
 }
 function draw() {
-  //The skt and the star
+  //The sky and the star
   noStroke();
-  background(0,0,0);
-  for(let index in starX){
-      fill(255,255,255,Math.abs(Math.sin(starAlpha[index]))*255);
-      ellipse(starX[index],starY[index],3);
-      starAlpha[index] = starAlpha[index] + 0.04;
+  background(0, 0, 0);
+  for (let index in starX) {
+    fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
+    ellipse(starX[index], starY[index], 3);
+    starAlpha[index] = starAlpha[index] + 0.04;
   }
 
   // The Rotation of the axe
@@ -215,80 +220,120 @@ function draw() {
   //The move of board
   board(boardX - 40, boardY);
   if (keyIsDown(39) && boardX + 40 <= 800) {
-    boardX += 10; // Board go to right
+    boardX += 10;
   } else if (keyIsDown(37) && boardX - 40 >= 0) {
-    boardX -= 10; // Board go to left
+    boardX -= 10;
   }
 
-  //The bounce of the axe
+  // The bounce of the axe
   axeY += dropSpeed;
   axeX += bounceSpeed;
-  if (axeY + axeWidth / 2 > boardY && axeX + axeWidth / 2 > boardX - 40 && axeX - axeWidth / 2 < boardX + 40 && axeY - axeWidth / 2 < boardY +10 ) { 
-    dropSpeed = dropSpeed * -1; //Bounce of touch board
-  } else if (axeY <= 0 || axeY + axeWidth >= 600) {
-    dropSpeed = dropSpeed * -1; //Touching the boundary will bounce (Y)
+  if (
+    axeY + axeWidth / 2 > boardY &&
+    axeX + axeWidth / 2 > boardX - 40 &&
+    axeX - axeWidth / 2 < boardX + 40 &&
+    axeY - axeWidth / 2 < boardY + 10
+  ) {
+    dropSpeed = dropSpeed * -1;
+  } else if (axeY + axeWidth >= 600) {
+    lives--;
+    resetAxe();
+  } else if (axeY <= 0) {
+    dropSpeed = dropSpeed * -1;
   }
   if (axeX + axeWidth >= 800 || axeX - axeWidth / 2 <= 0) {
-    bounceSpeed = bounceSpeed * -1;//Touching the boundary will bounce (X)
+    bounceSpeed = bounceSpeed * -1;
   }
 
-  // Treasure chest and collision detection
-  for(let i=0; i<treasures.length; i++){
+  //  Treasure chest and collision detection
+  for (let i = 0; i < treasures.length; i++) {
     let treasure = treasures[i];
-    if(treasure.exists){
-      if (axeX + axeWidth / 2 >= treasure.x - treasureWidth / 2 &&
+    if (treasure.exists) {
+      if (
+        axeX + axeWidth / 2 >= treasure.x - treasureWidth / 2 &&
         axeX - axeWidth / 2 <= treasure.x + treasureWidth / 2 &&
         axeY + axeWidth / 2 >= treasure.y - treasureWidth / 2 &&
-        axeY - axeWidth / 2 <= treasure.y + treasureWidth / 2){
-          treasure.exists = false;
-          //Rebound logic
-          // X direction of motion
-          if(axeX < treasure.x){
-            bounceSpeed = -Math.abs(bounceSpeed);//Make sure to bounce left
-          }
-          else{
-            bounceSpeed = Math.abs(bounceSpeed);//Make sure to bounce Right
-          }
-          // Y direction of motion
-          if(axeY < treasure.y){
-            dropSpeed = -Math.abs(dropSpeed);//Make sure to go up
-          }else{
-            dropSpeed = Math.abs(dropSpeed);//Make sure to go down
-          }
-        }else{
-          drawTreasure(treasure.x,treasure.y);
-        }
+        axeY - axeWidth / 2 <= treasure.y + treasureWidth / 2
+      ) {
+        treasure.exists = false;
+
+        //The next code form LIU
+        score++;
+        reboundAxe(treasure);
+
+        //The next code form YAN
+      } else {
+        drawTreasure(treasure.x, treasure.y);
+      }
     }
   }
-  //Meteorite and collision detection
-  for(let i=0; i<meteorites.length; i++){
+
+  // Meteorite and collision detection
+  for (let i = 0; i < meteorites.length; i++) {
     let meteorite = meteorites[i];
-    if(meteorite.exists){
-      if (axeX + axeWidth / 2 > meteorite.x - meteoriteWidth / 2 &&
+    if (meteorite.exists) {
+      if (
+        axeX + axeWidth / 2 > meteorite.x - meteoriteWidth / 2 &&
         axeX - axeWidth / 2 < meteorite.x + meteoriteWidth / 2 &&
         axeY + axeWidth / 2 > meteorite.y - meteoriteWidth / 2 &&
-        axeY - axeWidth / 2 < meteorite.y + meteoriteWidth / 2){ 
-           meteorite.isFalling = true; 
-          //Rebound logic
-          // X direction of motion
-          if(axeX < meteorite.x){
-            bounceSpeed = -Math.abs(bounceSpeed);//Make sure to bounce left
-          }else{
-            bounceSpeed = Math.abs(bounceSpeed);//Make sure to bounce right
-          }
-          // Y direction of motion
-          if(axeY < meteorite.y){
-            dropSpeed = -Math.abs(dropSpeed);//Make sure to go up
-          }else{
-            dropSpeed = Math.abs(dropSpeed);//Make sure to go down
-          }
-        }else{
-          drawMeteorite(meteorite.x,meteorite.y);
-        }
-        if(meteorite.isFalling){ // The meteorite is Falling
-          meteorite.y += 3;
-          drawMeteorite(meteorite.x,meteorite.y);
-        }
+        axeY - axeWidth / 2 < meteorite.y + meteoriteWidth / 2
+      ) {
+        meteorite.isFalling = true;
+
+        //The next code form LIU
+        score--;
+        reboundAxe(meteorite);
+
+        //The next code form YAN
+      } else {
+        drawMeteorite(meteorite.x, meteorite.y);
+      }
+      if (meteorite.isFalling) {
+        meteorite.y += 3;
+        drawMeteorite(meteorite.x, meteorite.y);
+      }
     }
+  }
+  // The next code form LIU
+  // show the score and lives
+  fill(255, 255, 255);
+  textSize(20);
+  text(`Score: ${score}`, 20, 30);
+  text(`Lives: ${lives}`, 20, 60);
+
+  // game over
+  if (lives <= 0) {
+    noLoop();
+    fill(255, 255, 255);
+    textSize(50);
+    textAlign(CENTER, CENTER);
+    text(
+      `Game Over! 
+Final Score: ${score}`,
+      width / 2,
+      height / 2
+    );
+  }
+}
+
+// resetaxe
+function resetAxe() {
+  axeX = boardX;
+  axeY = boardY - axeWidth / 2 - 5;
+  dropSpeed = 5;
+  bounceSpeed = 3;
+}
+
+//The next code form LIU
+function reboundAxe(meteorite) {
+  if (axeX < meteorite.x) {
+    bounceSpeed = -Math.abs(bounceSpeed);
+  } else {
+    bounceSpeed = Math.abs(bounceSpeed);
+  }
+  if (axeY < meteorite.y) {
+    dropSpeed = -Math.abs(dropSpeed);
+  } else {
+    dropSpeed = Math.abs(dropSpeed);
   }
 }
