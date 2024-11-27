@@ -227,7 +227,7 @@ function drawMeteorite(x, y) {
   ellipse(x - 20, y - 10, 5);
   pop();
 }
-function draw() {
+function gameScreen() {
   //The sky and the star
   noStroke();
   background(56,88,185);
@@ -345,7 +345,6 @@ Final Score: ${score}`,
     );
   }
 }
-
 // resetaxe
 function resetAxe() {
   axeX = boardX;
@@ -366,4 +365,7 @@ function reboundAxe(meteorite) {
   } else {
     dropSpeed = Math.abs(dropSpeed);
   }
+}
+function draw(){
+  gameScreen();
 }
