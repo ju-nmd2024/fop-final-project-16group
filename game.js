@@ -29,6 +29,10 @@ let starX = [];
 let starY = [];
 let starAlpha = [];
 
+//The location of the gameBackground
+let gameBackgroundX =400;
+let gameBackgroundY =600;
+
 function setup() {
   createCanvas(800, 600);
 
@@ -69,6 +73,31 @@ function setup() {
     starY.push(random(460));
     starAlpha.push(random());
   }
+}
+function drawMountain(x,y) {
+  // Mountains in the background
+  fill(100, 100, 150);
+  noStroke();
+  triangle(x-200, y, x-50, y-250, x+100, y);
+  fill(120, 120, 170);
+  triangle(x, y, x+150, y-200, x+300, y);
+  fill(80, 80, 120);
+  triangle(x-400, y, x-250, y-200, x-100, y);
+}
+function drawForest(x,y) {
+  // Trees in the forest
+  for(let i = 0; i< 5; i++){
+      fill(139, 69, 19); // Tree trunk color
+      rect(x-300 + i *140, y-100, 20, 100);
+      fill(34, 139, 34); // Tree foliage color
+      ellipse(x-290+i*140, y-140,80,120);
+  }
+}
+function gameBackground(x,y){
+fill(0);
+rect(x-400,y,800,height);
+drawMountain(x,y);
+drawForest(x,y);
 }
 function handle(x, y) {
   push();
@@ -201,12 +230,13 @@ function drawMeteorite(x, y) {
 function draw() {
   //The sky and the star
   noStroke();
-  background(0, 0, 0);
+  background(56,88,185);
   for (let index in starX) {
     fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
     ellipse(starX[index], starY[index], 3);
     starAlpha[index] = starAlpha[index] + 0.04;
   }
+  gameBackground(gameBackgroundX,gameBackgroundY);
 
   // The Rotation of the axe
   push();
