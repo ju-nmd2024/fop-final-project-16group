@@ -1,9 +1,9 @@
-//The next code form LIU
+//The next code form LIU (2-4)
 //score and lives
 let score = 0;
 let lives = 3;
 
-//The next code form YAN
+//The next code form YAN (7-288)
 // The setting of treasureChest
 let treasureWidth = 40;
 let treasures = [];
@@ -287,11 +287,11 @@ function gameScreen() {
       ) {
         treasure.exists = false;
 
-        //The next code form LIU
+        //The next code form LIU (291 - 292)
         score++;
         reboundAxe(treasure);
 
-        //The next code form YAN
+        //The next code form YAN (295-311)
       } else {
         drawTreasure(treasure.x, treasure.y);
       }
@@ -310,11 +310,11 @@ function gameScreen() {
       ) {
         meteorite.isFalling = true;
 
-        //The next code form LIU
+        //The next code form LIU (314 - 315)
         score--;
         reboundAxe(meteorite);
 
-        //The next code form YAN
+        //The next code form YAN( 318 -326)
       } else {
         drawMeteorite(meteorite.x, meteorite.y);
       }
@@ -324,7 +324,7 @@ function gameScreen() {
       }
     }
   }
-  // The next code form LIU
+  // The next code form LIU (328-368)
   // show the score and lives
   fill(255, 255, 255);
   textSize(20);
@@ -366,6 +366,7 @@ function reboundAxe(meteorite) {
     dropSpeed = Math.abs(dropSpeed);
   }
 }
+  // The next code form YAN (370 - ) 
 function draw(){
   gameScreen();
 }
