@@ -30,11 +30,11 @@ let starY = [];
 let starAlpha = [];
 
 //The location of the gameBackground
-let gameBackgroundX =400;
-let gameBackgroundY =600;
+let gameBackgroundX = 400;
+let gameBackgroundY = 600;
 
-let alphaValue = 255;// For the text of the startScreen
-let state  = 'start';
+let alphaValue = 255; // For the text of the startScreen
+let state = "start";
 let startScreenX = 400;
 let startScreenY = 500;
 
@@ -79,55 +79,55 @@ function setup() {
     starAlpha.push(random());
   }
 }
-function startScreen(){
+function startScreen() {
   noStroke();
-  background(56,88,185);
-  for( let index in starX){
-      fill(255,255,255,Math.abs(Math.sin(starAlpha[index]))*255);
-      ellipse(starX[index],starY[index],4);
-      starAlpha[index]= starAlpha[index]+ 0.04;
+  background(56, 88, 185);
+  for (let index in starX) {
+    fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
+    ellipse(starX[index], starY[index], 4);
+    starAlpha[index] = starAlpha[index] + 0.04;
   }
-  gameBackground(startScreenX,startScreenY+100);
+  gameBackground(startScreenX, startScreenY + 100);
   let flickerSpeed = 0.03;
   alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
-  fill(255,215,0,alphaValue);
+  fill(255, 215, 0, alphaValue);
   textStyle(BOLDITALIC);
   textSize(50);
-  text("Treasure hunt in the jungle",100,height/3);
-  fill(255,255,255);
-  stroke(100,200,200);
+  text("Treasure hunt in the jungle", 100, height / 3);
+  fill(255, 255, 255);
+  stroke(100, 200, 200);
   strokeWeight(2);
-  rect(width/2-60,height/2,120,40,20);
-  fill(23,255,100);
+  rect(width / 2 - 60, height / 2, 120, 40, 20);
+  fill(23, 255, 100);
   textSize(30);
-  stroke(100,100,100);
+  stroke(100, 100, 100);
   strokeWeight(5);
-  text("Start",width/2-35,height/2+31);
+  text("Start", width / 2 - 35, height / 2 + 31);
 }
-function drawMountain(x,y) {
+function drawMountain(x, y) {
   // Mountains in the background
   fill(100, 100, 150);
   noStroke();
-  triangle(x-200, y, x-50, y-250, x+100, y);
+  triangle(x - 200, y, x - 50, y - 250, x + 100, y);
   fill(120, 120, 170);
-  triangle(x, y, x+150, y-200, x+300, y);
+  triangle(x, y, x + 150, y - 200, x + 300, y);
   fill(80, 80, 120);
-  triangle(x-400, y, x-250, y-200, x-100, y);
+  triangle(x - 400, y, x - 250, y - 200, x - 100, y);
 }
-function drawForest(x,y) {
+function drawForest(x, y) {
   // Trees in the forest
-  for(let i = 0; i< 5; i++){
-      fill(139, 69, 19); // Tree trunk color
-      rect(x-300 + i *140, y-100, 20, 100);
-      fill(34, 139, 34); // Tree foliage color
-      ellipse(x-290+i*140, y-140,80,120);
+  for (let i = 0; i < 5; i++) {
+    fill(139, 69, 19); // Tree trunk color
+    rect(x - 300 + i * 140, y - 100, 20, 100);
+    fill(34, 139, 34); // Tree foliage color
+    ellipse(x - 290 + i * 140, y - 140, 80, 120);
   }
 }
-function gameBackground(x,y){
-fill(0);
-rect(x-400,y,800,height);
-drawMountain(x,y);
-drawForest(x,y);
+function gameBackground(x, y) {
+  fill(0);
+  rect(x - 400, y, 800, height);
+  drawMountain(x, y);
+  drawForest(x, y);
 }
 function handle(x, y) {
   push();
@@ -260,13 +260,13 @@ function drawMeteorite(x, y) {
 function gameScreen() {
   //The sky and the star
   noStroke();
-  background(56,88,185);
+  background(56, 88, 185);
   for (let index in starX) {
     fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
     ellipse(starX[index], starY[index], 3);
     starAlpha[index] = starAlpha[index] + 0.04;
   }
-  gameBackground(gameBackgroundX,gameBackgroundY);
+  gameBackground(gameBackgroundX, gameBackgroundY);
 
   // The Rotation of the axe
   push();
@@ -340,10 +340,6 @@ function gameScreen() {
       ) {
         meteorite.isFalling = true;
 
-        //The next code form LIU (314 - 315)
-        score--;
-        reboundAxe(meteorite);
-
         //The next code form YAN( 318 -326)
       } else {
         drawMeteorite(meteorite.x, meteorite.y);
@@ -351,6 +347,17 @@ function gameScreen() {
       if (meteorite.isFalling) {
         meteorite.y += 3;
         drawMeteorite(meteorite.x, meteorite.y);
+        //The next code form LIU
+        if (
+          meteorite.y + meteoriteWidth / 2 >= boardY &&
+          meteorite.x + meteoriteWidth / 2 > boardX - 40 &&
+          meteorite.x - meteoriteWidth / 2 < boardX + 40
+        ) {
+          score--;
+          meteorite.exists = false;
+        } else if (meteorite.y > height) {
+          meteorite.exists = false;
+        }
       }
     }
   }
@@ -396,18 +403,23 @@ function reboundAxe(meteorite) {
     dropSpeed = Math.abs(dropSpeed);
   }
 }
-  // The next code form YAN (370 - ) 
-function draw(){
-  if(state === 'start'){
+// The next code form YAN (370 - )
+function draw() {
+  if (state === "start") {
     startScreen();
   }
-  if(state ==='game'){
+  if (state === "game") {
     gameScreen();
   }
-  
 }
-function mouseClicked(){
-  if(state === 'start' && mouseX >= width/2-60 && mouseX <=width/2+60 && mouseY >= height/2 && mouseY <= height/2+40){
-    state = 'game';
+function mouseClicked() {
+  if (
+    state === "start" &&
+    mouseX >= width / 2 - 60 &&
+    mouseX <= width / 2 + 60 &&
+    mouseY >= height / 2 &&
+    mouseY <= height / 2 + 40
+  ) {
+    state = "game";
   }
 }
