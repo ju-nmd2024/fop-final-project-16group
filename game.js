@@ -198,14 +198,14 @@ function axe(x, y) {
 function board(x, y) {
   fill(139, 69, 19);
   noStroke();
-  rect(x - 40, y, 80, 10);
-  ellipse(x + 39, y + 5, 10, 10);
+  rect(boardX - 40, boardY, 80, 10);
+  ellipse(boardX + 39, boardY + 5, 10, 10);
   fill(277, 164, 112);
-  ellipse(x - 39, y + 5, 8, 9);
+  ellipse(boardX - 39, boardY + 5, 8, 9);
   stroke(0);
   strokeWeight(0.1);
-  ellipse(x - 39, y + 5, 6);
-  ellipse(x - 39, y + 5, 3);
+  ellipse(boardX - 39, boardY + 5, 6);
+  ellipse(boardX - 39, boardY + 5, 3);
 }
 function drawTreasure(x, y) {
   push();
