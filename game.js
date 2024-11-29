@@ -340,6 +340,16 @@ function gameScreen() {
         axeY - axeWidth / 2 < meteorite.y + meteoriteWidth / 2
       ) {
         meteorite.isFalling = true;
+        if (axeX < meteorite.x) {
+          bounceSpeed = -Math.abs(bounceSpeed);
+        } else {
+          bounceSpeed = Math.abs(bounceSpeed);
+        }
+        if (axeY < meteorite.y) {
+          dropSpeed = -Math.abs(dropSpeed);
+        } else {
+          dropSpeed = Math.abs(dropSpeed);
+        }
 
         //The next code form YAN( 318 -326)
       } else {
