@@ -15,7 +15,7 @@ This template provides a simple setup for publishing p5.js games. It includes th
    - To change the title that appears in the browser tab, open the `index.html` file.
    - Locate line 6:
      ```html
-     <title>Foundations of Programming</title>
+     <title>Treasure hunt in the jungle</title>
      ```
    - Replace **only** the text between `<title>` and `</title>` with your desired title.
 
