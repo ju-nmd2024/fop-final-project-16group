@@ -3,7 +3,7 @@
 let score = 0;
 let lives = 3;
 
-//The next code form YAN (7-288)
+//The next code form YAN (7-319)
 // The setting of treasureChest
 let treasureWidth = 40;
 let treasures = [];
@@ -32,6 +32,11 @@ let starAlpha = [];
 //The location of the gameBackground
 let gameBackgroundX =400;
 let gameBackgroundY =600;
+
+let alphaValue = 255;// For the text of the startScreen
+let state  = 'start';
+let startScreenX = 400;
+let startScreenY = 500;
 
 function setup() {
   createCanvas(800, 600);
@@ -73,6 +78,31 @@ function setup() {
     starY.push(random(460));
     starAlpha.push(random());
   }
+}
+function startScreen(){
+  noStroke();
+  background(56,88,185);
+  for( let index in starX){
+      fill(255,255,255,Math.abs(Math.sin(starAlpha[index]))*255);
+      ellipse(starX[index],starY[index],4);
+      starAlpha[index]= starAlpha[index]+ 0.04;
+  }
+  gameBackground(startScreenX,startScreenY+100);
+  let flickerSpeed = 0.03;
+  alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
+  fill(255,215,0,alphaValue);
+  textStyle(BOLDITALIC);
+  textSize(50);
+  text("Treasure hunt in the jungle",100,height/3);
+  fill(255,255,255);
+  stroke(100,200,200);
+  strokeWeight(2);
+  rect(width/2-60,height/2,120,40,20);
+  fill(23,255,100);
+  textSize(30);
+  stroke(100,100,100);
+  strokeWeight(5);
+  text("Start",width/2-35,height/2+31);
 }
 function drawMountain(x,y) {
   // Mountains in the background
@@ -368,5 +398,16 @@ function reboundAxe(meteorite) {
 }
   // The next code form YAN (370 - ) 
 function draw(){
-  gameScreen();
+  if(state === 'start'){
+    startScreen();
+  }
+  if(state ==='game'){
+    gameScreen();
+  }
+  
+}
+function mouseClicked(){
+  if(state === 'start' && mouseX >= width/2-60 && mouseX <=width/2+60 && mouseY >= height/2 && mouseY <= height/2+40){
+    state = 'game';
+  }
 }
