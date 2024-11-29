@@ -14,7 +14,7 @@ let meteorites = [];
 
 // The rotation and bounce of the axe
 let angle = 0;
-let dropSpeed = 5;
+let dropSpeed = 3;
 let bounceSpeed = 3;
 let axeWidth = 20;
 let axeX = 300;
@@ -22,7 +22,7 @@ let axeY = 350;
 
 // The location of board
 let boardY = 500;
-let boardX = width / 2;
+let boardX;
 
 // The setting of the sky and stars
 let starX = [];
@@ -40,6 +40,7 @@ let startScreenY = 500;
 
 function setup() {
   createCanvas(800, 600);
+  boardX = width /2;
 
   //The location and status of each treasure chest and meteorite
   let rows = 4;
@@ -85,7 +86,7 @@ function startScreen() {
   for (let index in starX) {
     fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
     ellipse(starX[index], starY[index], 4);
-    starAlpha[index] = starAlpha[index] + 0.04;
+    starAlpha[index] = (starAlpha[index] + 0.04,0,255);
   }
   gameBackground(startScreenX, startScreenY + 100);
   let flickerSpeed = 0.03;
@@ -194,17 +195,17 @@ function axe(x, y) {
   ellipse(x, y, 380);
   pop();
 }
-function board(X, Y) {
+function board(x, y) {
   fill(139, 69, 19);
   noStroke();
-  rect(boardX - 40, boardY, 80, 10);
-  ellipse(boardX + 39, boardY + 5, 10, 10);
+  rect(x - 40, y, 80, 10);
+  ellipse(x + 39, y + 5, 10, 10);
   fill(277, 164, 112);
-  ellipse(boardX - 39, boardY + 5, 8, 9);
+  ellipse(x - 39, y + 5, 8, 9);
   stroke(0);
   strokeWeight(0.1);
-  ellipse(boardX - 39, boardY + 5, 6);
-  ellipse(boardX - 39, boardY + 5, 3);
+  ellipse(x - 39, y + 5, 6);
+  ellipse(x - 39, y + 5, 3);
 }
 function drawTreasure(x, y) {
   push();
