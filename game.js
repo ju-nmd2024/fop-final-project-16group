@@ -40,7 +40,7 @@ let startScreenY = 500;
 
 function setup() {
   createCanvas(800, 600);
-  boardX = width /2;
+  boardX = width / 2;
 
   //The location and status of each treasure chest and meteorite
   let rows = 4;
@@ -86,7 +86,7 @@ function startScreen() {
   for (let index in starX) {
     fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
     ellipse(starX[index], starY[index], 4);
-    starAlpha[index] = (starAlpha[index] + 0.04,0,255);
+    starAlpha[index] = (starAlpha[index] + 0.04, 0, 255);
   }
   gameBackground(startScreenX, startScreenY + 100);
   let flickerSpeed = 0.03;
@@ -104,6 +104,36 @@ function startScreen() {
   stroke(100, 100, 100);
   strokeWeight(5);
   text("Start", width / 2 - 35, height / 2 + 31);
+}
+
+function endScreen() {
+  noStroke();
+  background(56, 88, 185);
+  for (let index in starX) {
+    fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
+    ellipse(starX[index], starY[index], 4);
+    starAlpha[index] = starAlpha[index] + 0.04;
+  }
+  gameBackground(startScreenX, startScreenY + 100);
+  let flickerSpeed = 0.03;
+  alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
+  fill(255, 215, 0, alphaValue);
+  textStyle(BOLDITALIC);
+  textSize(50);
+  textAlign(CENTER, CENTER);
+  text("Game over!", width / 2, height / 2 - 80);
+
+  //buton
+  fill(255, 255, 255);
+  stroke(100, 200, 200);
+  strokeWeight(2);
+  rect(width / 2 - 60, height / 2 + 20, 120, 40, 20);
+  fill(23, 255, 100);
+  textSize(20);
+  stroke(100, 100, 100);
+  strokeWeight(5);
+  textAlign(CENTER, CENTER);
+  text("Try again", width / 2, height / 2 + 40);
 }
 function drawMountain(x, y) {
   // Mountains in the background
@@ -422,7 +452,14 @@ function draw() {
   if (state === "game") {
     gameScreen();
   }
+  if (state === "end") {
+    endScreen();
+  }
+  if (state === "win") {
+    winScreen();
+  }
 }
+
 function mouseClicked() {
   if (
     state === "start" &&
