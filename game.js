@@ -1,100 +1,75 @@
-//The next code form LIU (2-4)
-//score and lives
-let score = 0;
-let lives = 3;
-
-//The next code form YAN (7-319)
-// The setting of treasureChest
-let treasureWidth = 40;
-let treasures = [];
-
-//The setting of the meteorite
-let meteoriteWidth = 40;
-let meteorites = [];
-
-// The rotation and bounce of the axe
-let angle = 0;
-let dropSpeed = 3;
-let bounceSpeed = 3;
-let axeWidth = 20;
-let axeX = 300;
-let axeY = 350;
-
-// The location of board
-let boardY = 500;
-let boardX;
-
-// The setting of the sky and stars
-let starX = [];
-let starY = [];
-let starAlpha = [];
-
-//The location of the gameBackground
-let gameBackgroundX = 400;
-let gameBackgroundY = 600;
-
-let alphaValue = 255; // For the text of the startScreen
-let state = "start";
-let startScreenX = 400;
-let startScreenY = 500;
-
-function setup() {
-  createCanvas(800, 600);
-  boardX = width / 2;
-
-  //The location and status of each treasure chest and meteorite
-  let rows = 4;
-  let cols = 7;
-
-  // The location and spacing of the first treasure chest
-  let startX = 100;
-  let startY = 100;
-  let gap = 100;
-  let rowGap = 50;
-
-  // The location and spacing of the treasure and meteorite
-  let meteoriteX = 150;
-  let meteoriteY = 100;
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      treasures.push({
-        x: startX + col * gap,
-        y: startY + row * rowGap,
-        exists: true,
-      });
+class GameBackground{
+  constructor(){
+    this.starX = [];
+    this.starY = [];
+    this.starAlpha = [];
+    this.x = 400;
+    this.y = 500;
+  }
+  // set the location of the star
+  setup(){
+    for(let i = 0; i < 150; i++){
+      this.starX.push(random(800));
+      this.starY.push(random(360));
+      this.starAlpha.push(random(255));
     }
-    for (let col = 0; col < cols; col++) {
-      meteorites.push({
-        x: meteoriteX + col * gap,
-        y: meteoriteY + row * rowGap,
-        exists: true,
-        isFalling: false,
-      });
+  }
+  drawBackground(x,y){
+// draw the mountains
+    noStroke();
+    background(56, 88, 185);
+    fill(100, 100, 150);
+    noStroke();
+    triangle( x- 200, y+100, x - 50, y- 150,  x+ 100, y+100);
+    fill(120, 120, 170);
+    triangle(x, y+100, x + 150, y - 100, x + 300, y+100);
+    fill(80, 80, 120);
+    triangle(x - 400, y+100, x - 250, y - 100, x - 100, y+100);
+// draw the trees
+    for (let i = 0; i < 5; i++) {
+      fill(139, 69, 19); // Tree trunk color
+      rect(x - 300 + i * 140, y , 20, 100);
+      fill(34, 139, 34); // Tree foliage color
+      ellipse(x - 290 + i * 140, y -60, 80, 120);
+    }
+
+  }
+  // draw the stars
+  drawStars(){
+    for(let index in this.starX){
+      fill(255,255,255,Math.abs(Math.sin(this.starAlpha[index]))*255);
+      ellipse(this.starX[index],this.starY[index],3);
+      this.starAlpha[index] += 0.03;
     }
   }
 
-  // Initialize stars' positions and their alpha values
-  for (let i = 0; i < 150; i++) {
-    starX.push(random(800));
-    starY.push(random(460));
-    starAlpha.push(random());
-  }
 }
-function startScreen() {
+class StartScreen{
+  constructor(){
+    this.alphaValue = 255;
+    this.backgroundObj = new GameBackground();
+  }
+ setup(){
+  this.backgroundObj.setup();
+ }
+// The start screen
+draw(){
   noStroke();
   background(56, 88, 185);
-  for (let index in starX) {
-    fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
-    ellipse(starX[index], starY[index], 4);
-    starAlpha[index] = (starAlpha[index] + 0.04, 0, 255);
-  }
-  gameBackground(startScreenX, startScreenY + 100);
+//Draw background
+this.backgroundObj.drawBackground(400,500);
+//Draw stars
+this.backgroundObj.drawStars();
+
+// the text and flash
   let flickerSpeed = 0.03;
-  alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
-  fill(255, 215, 0, alphaValue);
+  this.alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
+  fill(255, 215, 0, this.alphaValue);
   textStyle(BOLDITALIC);
   textSize(50);
   text("Treasure hunt in the jungle", 100, height / 3);
+
+// the start button
   fill(255, 255, 255);
   stroke(100, 200, 200);
   strokeWeight(2);
@@ -106,368 +81,401 @@ function startScreen() {
   text("Start", width / 2 - 35, height / 2 + 31);
 }
 
-function endScreen() {
-  noStroke();
-  background(56, 88, 185);
-  for (let index in starX) {
-    fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
-    ellipse(starX[index], starY[index], 4);
-    starAlpha[index] = starAlpha[index] + 0.04;
-  }
-  gameBackground(startScreenX, startScreenY + 100);
-  let flickerSpeed = 0.03;
-  alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
-  fill(255, 215, 0, alphaValue);
-  textStyle(BOLDITALIC);
-  textSize(50);
-  textAlign(CENTER, CENTER);
-  text("Game over!", width / 2, height / 2 - 80);
+// check the clicked
+clicked(){
+  if (
+    mouseX >= width / 2 - 60 &&
+    mouseX <= width / 2 + 60 &&
+    mouseY >= height / 2 &&
+    mouseY <= height / 2 + 40 &&
+  mouseIsPressed){
+      return true;
+    }return false;
+}
+}
+class DrawTreasure{
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.exists = true;
+        this.width = 40;
+    }
+    draw(){
+        if (this.exists){
+            push();
+            translate(this.x,this.y);
+            scale(0.5);
+            strokeWeight(2);
+            stroke(90, 90, 90);
+            fill(239, 186, 107);
+            rect(-40, -40, 80, 30, 20, 20, 0);
+            quad(-40, -9, -38, +40, +38, +40, +40, -9);
+            fill(187, 150, 111);
+            stroke(90, 90, 90);
+            strokeWeight(2);
+            beginShape();
+            vertex(-32, -2);
+            vertex(-31, +32);
+            vertex(+31, +32);
+            vertex(+32, -2);
+            vertex(+10, -2);
+            vertex(+8, +8);
+            vertex(-8, +8);
+            vertex(-10, -2);
+            endShape();
+            rect(-34, -40, 68, 30, 20, 20, 0);
+            for (let q = 0; q < 3; q++) {
+                stroke(127, 122, 115);
+                line(-30,  +9 + q * 8, +30, +9 + q * 8);
+                line(-30 - q,  -33 + q * 8, +30 + q, -33 + q * 8);
+              }
+// The key of the treasureChest
+              noStroke();
+              fill(100, 100, 100);
+              ellipse(0, 0, 8, 5);
+              rect(-1.5, 0, 3, 6);
+              pop();
 
-  //buton
-  fill(255, 255, 255);
-  stroke(100, 200, 200);
-  strokeWeight(2);
-  rect(width / 2 - 60, height / 2 + 20, 120, 40, 20);
-  fill(23, 255, 100);
-  textSize(20);
-  stroke(100, 100, 100);
-  strokeWeight(5);
-  textAlign(CENTER, CENTER);
-  text("Try again", width / 2, height / 2 + 40);
+        }   
+    }
+// check the collision of the treasure
+    checkCollision(){
+      if(!this.exists) return;
+// define the boundary of axe 
+ let axeTop = axeObj.y - axeObj.width/2;
+ let axeBottom = axeObj.y + axeObj.width/2;
+ let axeLeft = axeObj.x - axeObj.width/2;
+ let axeRight = axeObj.x + axeObj.width/2;
+// define the boundary of trueasure
+ let treasureTop = this.y -this.width/2;
+ let treasureBottom = this.y + this.width/2;
+ let treasureLeft = this.x - this.width/2;
+ let treasureRight = this.x + this.width/2;
+// check the  top collision
+ if(axeBottom >= treasureTop &&
+   axeTop < treasureTop && 
+   axeRight >= treasureLeft && 
+   axeLeft <= treasureRight)
+   {if(axeObj.dropSpeed > 0){
+    axeObj.dropSpeed = -Math.abs(axeObj.dropSpeed);
+   }else{axeObj.dropSpeed = Math.abs(axeObj.dropSpeed);
+   }
+  this.exists = false;
+// check the  bottom collision
+  }else if (axeTop <= treasureBottom && axeBottom > treasureBottom && axeRight >= treasureLeft && axeLeft <= treasureRight){
+  axeObj.dropSpeed = Math.abs(axeObj.dropSpeed);
+  this.exists = false;
+ }
+ // check the  left collision
+  if(axeRight >= treasureLeft &&
+  axeLeft < treasureLeft &&
+  axeBottom > treasureTop &&
+  axeTop  < treasureBottom
+  ){
+    if(axeObj.bounceSpeed > 0){
+    axeObj.bounceSpeed = -Math.abs(axeObj.bounceSpeed);
+    }else{
+    axeObj.bounceSpeed = Math.abs(axeObj.bounceSpeed);
+    }
+    this.exists = false; }
+// check the  right collision
+    else if (axeLeft <= treasureRight &&
+      axeRight > treasureRight &&
+      axeTop < treasureBottom &&
+      axeBottom > treasureTop
+    ){this.exists = false;
+      axeObj.bounceSpeed = Math.abs(axeObj.bounceSpeed);
+    }
+ }
 }
-function drawMountain(x, y) {
-  // Mountains in the background
-  fill(100, 100, 150);
-  noStroke();
-  triangle(x - 200, y, x - 50, y - 250, x + 100, y);
-  fill(120, 120, 170);
-  triangle(x, y, x + 150, y - 200, x + 300, y);
-  fill(80, 80, 120);
-  triangle(x - 400, y, x - 250, y - 200, x - 100, y);
+class DrawMeteorit{
+  constructor(x,y){
+    this.x=x;
+    this.y=y;
+    this.exists = true;
+    this.isFalling = false;
+    this.width = 40;
+  }
+  draw(){
+    push();
+    translate(this.x, this.y);
+    scale(0.5);
+    stroke(100,100,100);
+    strokeWeight(2);
+    fill(211, 211, 211);
+    ellipse(0, 0, 80, 70);
+    fill(69, 69);
+    stroke(100,50,50);
+    strokeWeight(1);
+    ellipse(0,  - 20, 20, 10);
+    ellipse(- 20,  10, 15, 10);
+    ellipse( 20,  - 10, 10);
+    ellipse( 10,  10, 15);
+    ellipse( 20,  - 10, 5);
+    pop();
+    if(this.isFalling === true){
+      this.y += 2;
+    }
+  }
+  checkCollision(){
+    if(!this.exists) return;
+// define the boundary of axe 
+let axeTop = axeObj.y - axeObj.width/2;
+let axeBottom = axeObj.y + axeObj.width/2;
+let axeLeft = axeObj.x - axeObj.width/2;
+let axeRight = axeObj.x + axeObj.width/2;
+// define the boundary of meteorit
+let meteoritTop = this.y -this.width/2;
+let meteoritBottom = this.y + this.width/2;
+let meteoritLeft = this.x - this.width/2;
+let meteoritRight = this.x + this.width/2;
+// check the  top collision
+if(axeBottom >= meteoritTop &&
+ axeTop < meteoritTop && 
+ axeRight >= meteoritLeft && 
+ axeLeft <= meteoritRight)
+ {if(axeObj.dropSpeed > 0){
+  axeObj.dropSpeed = -Math.abs(axeObj.dropSpeed);
+ }else{axeObj.dropSpeed = Math.abs(axeObj.dropSpeed);
+ }
+this.isFalling = true;
+// check the  bottom collision
+}else if (axeTop <= meteoritBottom && axeBottom > meteoritBottom && axeRight >= meteoritLeft && axeLeft <= meteoritRight){
+axeObj.dropSpeed = Math.abs(axeObj.dropSpeed);
+this.isFalling = true;
 }
-function drawForest(x, y) {
-  // Trees in the forest
-  for (let i = 0; i < 5; i++) {
-    fill(139, 69, 19); // Tree trunk color
-    rect(x - 300 + i * 140, y - 100, 20, 100);
-    fill(34, 139, 34); // Tree foliage color
-    ellipse(x - 290 + i * 140, y - 140, 80, 120);
+// check the  left collision
+if(axeRight >= meteoritLeft &&
+axeLeft < meteoritLeft &&
+axeBottom > meteoritTop &&
+axeTop  < meteoritBottom
+){
+  if(axeObj.bounceSpeed > 0){
+  axeObj.bounceSpeed = -Math.abs(axeObj.bounceSpeed);
+  }else{
+  axeObj.bounceSpeed = Math.abs(axeObj.bounceSpeed);
+  }
+  this.isFalling = true; }
+// check the  right collision
+  else if (axeLeft <= meteoritRight &&
+    axeRight > meteoritRight &&
+    axeTop < meteoritBottom &&
+    axeBottom > meteoritTop
+  ){this.isFalling = true;
+    axeObj.bounceSpeed = Math.abs(axeObj.bounceSpeed);
   }
 }
-function gameBackground(x, y) {
-  fill(0);
-  rect(x - 400, y, 800, height);
-  drawMountain(x, y);
-  drawForest(x, y);
 }
-function handle(x, y) {
+class Axe{
+    constructor(){
+    this.x = 300;
+    this.y = 350;
+    this.dropSpeed = 2;
+    this.bounceSpeed = 2;
+    this.width = 20;
+    this.angle = 0;
+  }
+// draw the axe
+  draw(){ 
+// the handle 
   push();
-  translate(x, y);
-  // scale the size of axe
+  translate(this.x, this.y);
+// scale the size of axe
   scale(0.05);
-  translate(-x, -y);
+// let the axe spin
+  rotate(this.angle);
+  this.angle += 0.5;
+// The outline of the axe
+  fill(255,255,255);
+  stroke(255);
+  strokeWeight(5);
+  ellipse(0, 0, 380);
   fill(139, 69, 19);
   noStroke();
   strokeWeight(2);
-  rect(x - 10, y - 20, 20, 140);
+  rect(- 10,  - 20, 20, 140);
   fill(100, 100, 100);
-  rect(x - 20, y + 10, 40, 10, 5);
-  rect(x - 20, y - 20, 40, 10, 5);
+  rect( - 20,  10, 40, 10, 5);
+  rect( - 20,  - 20, 40, 10, 5);
   fill(205, 133, 63);
-  rect(x - 18, y - 8, 36, 16, 5);
+  rect(- 18,  - 8, 36, 16, 5);
   fill(222, 184, 135);
-  ellipse(x, y, 20, 20);
+  ellipse(0, 0, 20, 20);
   fill(225, 0, 0);
-  ellipse(x, y, 18, 18);
+  ellipse(0, 0, 18, 18);
   fill(255, 255, 255);
-  ellipse(x + 2, y - 4, 5);
+  ellipse( 2,  - 4, 5);
   stroke(85, 62, 47);
   strokeWeight(5);
   for (let i = 0; i < 8; i++) {
-    line(x - 8, 21 + y + i * 13, x + 8, 30 + y + i * 13);
-    line(x - 8, 30 + y + i * 13, x + 8, 21 + y + i * 13);
+  line(- 8, 21  + i * 13, + 8, 30  + i * 13);
+  line( - 8, 30 + i * 13, + 8, 21  + i * 13);
   }
-  pop();
-}
-function axe(x, y) {
-  push();
-  // Scale the size of the axe
-  translate(x, y);
-  scale(0.05);
-  translate(-x, -y);
+// the main axe
   stroke(0, 80, 80);
   strokeWeight(3);
   fill(100, 100, 100);
-  rect(x - 15, y + 142, 30, 10, 5);
+  rect(- 15,  142, 30, 10, 5);
   fill(125, 125, 125);
-  triangle(x - 10, y + 153, x, y + 160, x + 10, y + 153);
+  triangle(- 10,  + 153, 0,  + 160,  + 10,  + 153);
   stroke(0);
   strokeWeight(4);
   beginShape();
   fill(169, 169, 169);
-  vertex(x + 10, y + 120);
-  vertex(x - 10, y + 120);
-  bezierVertex(x - 40, y + 120, x - 60, y + 80, x - 60, y + 80);
-  bezierVertex(x - 100, y + 130, x - 60, y + 180, x - 60, y + 180);
-  bezierVertex(x, y + 100, x + 60, y + 180, x + 60, y + 180);
-  bezierVertex(x + 100, y + 130, x + 60, y + 80, x + 60, y + 80);
-  bezierVertex(x + 40, y + 120, x + 10, y + 120, x + 10, y + 120);
+  vertex(+ 10, + 120);
+  vertex( - 10,  + 120);
+  bezierVertex(- 40,  + 120,   - 60,  + 80,  - 60,  + 80);
+  bezierVertex( - 100,  + 130,  - 60,  + 180,  - 60,  + 180);
+  bezierVertex(0,  + 100,  + 60,  + 180,  + 60,  + 180);
+  bezierVertex(+ 100,  + 130,  + 60,  + 80,  + 60,  + 80);
+  bezierVertex(+ 40,  + 120, + 10,  + 120,  + 10,  + 120);
   endShape();
   strokeWeight(2);
-  rect(x - 12, y + 121, 24, 25);
+  rect( - 12,  + 121, 24, 25);
   fill(0);
   noStroke();
-  ellipse(x, y + 127, 5);
-  ellipse(x, y + 140, 5);
-  noFill();
-  stroke(255);
-  strokeWeight(5);
-  ellipse(x, y, 380);
+  ellipse(0,  + 127, 5);
+  ellipse(0,  + 140, 5);
   pop();
-}
-function board(x, y) {
-  fill(139, 69, 19);
-  noStroke();
-  rect(boardX - 40, boardY, 80, 10);
-  ellipse(boardX + 39, boardY + 5, 10, 10);
-  fill(277, 164, 112);
-  ellipse(boardX - 39, boardY + 5, 8, 9);
-  stroke(0);
-  strokeWeight(0.1);
-  ellipse(boardX - 39, boardY + 5, 6);
-  ellipse(boardX - 39, boardY + 5, 3);
-}
-function drawTreasure(x, y) {
-  push();
-  translate(x, y);
-  scale(0.5);
-  strokeWeight(2);
-  stroke(90, 90, 90);
-  fill(239, 186, 107);
-  rect(-40, -40, 80, 30, 20, 20, 0);
-  quad(-40, -9, -38, +40, +38, +40, +40, -9);
-  fill(187, 150, 111);
-  stroke(90, 90, 90);
-  strokeWeight(2);
-  beginShape();
-  vertex(-32, -2);
-  vertex(-31, +32);
-  vertex(+31, +32);
-  vertex(+32, -2);
-  vertex(+10, -2);
-  vertex(+8, +8);
-  vertex(-8, +8);
-  vertex(-10, -2);
-  endShape();
-  rect(-34, -40, 68, 30, 20, 20, 0);
-  for (let q = 0; q < 3; q++) {
-    stroke(127, 122, 115);
-    line(-30, 9 + q * 8, +30, 9 + q * 8);
-    line(-30 - q, -33 + q * 8, +30 + q, -33 + q * 8);
   }
-  // The key of the treasureChest
-  noStroke();
-  fill(100, 100, 100);
-  ellipse(0, 0, 8, 5);
-  rect(-1.5, 0, 3, 6);
-  pop();
-}
-function drawMeteorite(x, y) {
-  push();
-  translate(x, y);
-  scale(0.5);
-  translate(-x, -y);
-  fill(211, 211, 211);
-  ellipse(x, y, 80, 70);
-  fill(69, 69);
-  strokeWeight(2);
-  ellipse(x, y - 20, 20, 10);
-  ellipse(x - 20, y + 10, 15, 10);
-  ellipse(x + 20, y - 10, 10);
-  ellipse(x + 10, y + 10, 15);
-  ellipse(x - 20, y - 10, 5);
-  pop();
-}
-function gameScreen() {
-  //The sky and the star
-  noStroke();
-  background(56, 88, 185);
-  for (let index in starX) {
-    fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
-    ellipse(starX[index], starY[index], 3);
-    starAlpha[index] = starAlpha[index] + 0.04;
-  }
-  gameBackground(gameBackgroundX, gameBackgroundY);
-
-  // The Rotation of the axe
-  push();
-  translate(axeX, axeY);
-  rotate(angle);
-  angle = angle + 0.5;
-  handle(0, 0);
-  axe(0, 0);
-  pop();
-
-  //The move of board
-  board(boardX - 40, boardY);
-  if (keyIsDown(39) && boardX + 40 <= 800) {
-    boardX += 10;
-  } else if (keyIsDown(37) && boardX - 40 >= 0) {
-    boardX -= 10;
-  }
-
-  // The bounce of the axe
-  axeY += dropSpeed;
-  axeX += bounceSpeed;
+// method to move the axe
+moveAxe(){
+  this.x += this.bounceSpeed;
+  this.y += this.dropSpeed;
+// check the collision
   if (
-    axeY + axeWidth / 2 > boardY &&
-    axeX + axeWidth / 2 > boardX - 40 &&
-    axeX - axeWidth / 2 < boardX + 40 &&
-    axeY - axeWidth / 2 < boardY + 10
-  ) {
-    dropSpeed = dropSpeed * -1;
-  } else if (axeY + axeWidth >= 600) {
-    lives--;
-    resetAxe();
-  } else if (axeY <= 0) {
-    dropSpeed = dropSpeed * -1;
+    this.y + this.width / 2 >= boardObj.y &&
+    this.x + this.width / 2 >= boardObj.x - 40 &&
+    this.x - this.width /2 <= boardObj.x + 40 &&
+    this.y - this.width /2 <= boardObj.y+10
+    ) {
+    this.dropSpeed = this.dropSpeed * -1;
   }
-  if (axeX + axeWidth >= 800 || axeX - axeWidth / 2 <= 0) {
-    bounceSpeed = bounceSpeed * -1;
+// keep the axe inside the game
+  if (this.y <= 0){
+      this.dropSpeed = this.dropSpeed * -1;
+    }
+  if(this.x + this.width/2 >= 800 || this.x -this.width/2 <=0){
+    this.bounceSpeed = this.bounceSpeed * -1;
+  }
+} 
+}
+class Board{
+  constructor(){
+    this.x = width/2;
+    this.y = 500;
+    }
+    draw(){
+    push();
+    translate(this.x,this.y);
+    fill(139, 69, 19);
+    stroke(0);
+    strokeWeight(1);
+    rect(- 40, 0, 80, 10);
+    ellipse(+ 39,+ 5, 10, 10);
+    fill(27, 164, 112);
+    ellipse( - 39,5, 8, 9);
+    stroke(0);
+    strokeWeight(0.5);
+    ellipse(- 39, + 5, 6);
+    ellipse( - 39, + 5, 3);
+    pop();
+    }
+ // method to move the board
+    moveBoard(){
+    if(keyIsDown(39) && this.x + 45 <= 800){
+    this.x += 10;
+    }
+    if(keyIsDown(37) && this.x - 45 >= 0){
+    this.x -= 10;
+    }
+   }
+}
+//The setup of the treasurechest
+let treasures = [];
+let treasureWidth = 40;
+
+let meteorits = [];
+let meteoritWidth = 40;
+// use the startScreen
+let startScreenObj;
+// the state
+let state = 'start';
+
+function setup(){
+  createCanvas(800,600);
+  frameRate(120);
+// setup the gamebackgroun and the stars
+gameBackgroundObj = new GameBackground();
+gameBackgroundObj.setup(); //set the stars 
+// set the axe
+axeObj = new Axe();
+// set the board
+boardObj = new Board();
+// the location of the frist meteorit
+  let meteoritX = 150;
+  let meteoritY = 100;
+// the location of the frist treasureChest
+  let startX= 100;
+  let startY= 100;
+  let gap = 100;
+  let rawGap =50;
+  let rows = 4;
+  let cols = 7;
+  for(let row = 0; row < rows; row++){
+    for(let col = 0; col < cols; col++){
+        let x = startX+ col * gap;
+        let y = startY+  row * rawGap;
+        let exists = true;
+        treasures.push(new DrawTreasure(x,y));
+    }
+    for (let col = 0; col < cols; col++) {
+        let x = meteoritX + col * gap;
+        let y = meteoritY + row * rawGap;
+      meteorits.push(new DrawMeteorit(x,y));
+    }
+  }
+//setup the startScreen
+startScreenObj = new StartScreen();
+startScreenObj.setup();
+}
+function gameScreen(){
+// draw the gamebackgroun and the star
+  gameBackgroundObj.drawBackground(400, 500);
+  gameBackgroundObj.drawStars();
+
+  axeObj.draw();
+  axeObj.moveAxe();
+  boardObj.moveBoard();
+  boardObj.draw();
+// draw the treasurechest
+  for(let i = 0; i<treasures.length; i++){
+    if(treasures[i].exists ){
+      treasures[i].checkCollision();
+      if (treasures[i].exists){
+        treasures[i].draw();
+       }
+    } 
   }
 
-  //  Treasure chest and collision detection
-  for (let i = 0; i < treasures.length; i++) {
-    let treasure = treasures[i];
-    if (treasure.exists) {
-      if (
-        axeX + axeWidth / 2 >= treasure.x - treasureWidth / 2 &&
-        axeX - axeWidth / 2 <= treasure.x + treasureWidth / 2 &&
-        axeY + axeWidth / 2 >= treasure.y - treasureWidth / 2 &&
-        axeY - axeWidth / 2 <= treasure.y + treasureWidth / 2
-      ) {
-        treasure.exists = false;
-
-        //The next code form LIU (291 - 292)
-        score++;
-        reboundAxe(treasure);
-
-        //The next code form YAN (295-311)
-      } else {
-        drawTreasure(treasure.x, treasure.y);
+//draw the metrorits
+  for(let i = 0; i < meteorits.length; i++){
+    if(meteorits[i].exists){
+      meteorits[i].checkCollision();
+      if(meteorits[i].exists){
+        meteorits[i].draw();
       }
     }
   }
-
-  // Meteorite and collision detection
-  for (let i = 0; i < meteorites.length; i++) {
-    let meteorite = meteorites[i];
-    if (meteorite.exists) {
-      if (
-        axeX + axeWidth / 2 > meteorite.x - meteoriteWidth / 2 &&
-        axeX - axeWidth / 2 < meteorite.x + meteoriteWidth / 2 &&
-        axeY + axeWidth / 2 > meteorite.y - meteoriteWidth / 2 &&
-        axeY - axeWidth / 2 < meteorite.y + meteoriteWidth / 2
-      ) {
-        meteorite.isFalling = true;
-        if (axeX < meteorite.x) {
-          bounceSpeed = -Math.abs(bounceSpeed);
-        } else {
-          bounceSpeed = Math.abs(bounceSpeed);
-        }
-        if (axeY < meteorite.y) {
-          dropSpeed = -Math.abs(dropSpeed);
-        } else {
-          dropSpeed = Math.abs(dropSpeed);
-        }
-
-        //The next code form YAN( 318 -326)
-      } else {
-        drawMeteorite(meteorite.x, meteorite.y);
-      }
-      if (meteorite.isFalling) {
-        meteorite.y += 3;
-        drawMeteorite(meteorite.x, meteorite.y);
-        //The next code form LIU
-        if (
-          meteorite.y + meteoriteWidth / 2 >= boardY &&
-          meteorite.x + meteoriteWidth / 2 > boardX - 40 &&
-          meteorite.x - meteoriteWidth / 2 < boardX + 40
-        ) {
-          score--;
-          meteorite.exists = false;
-        } else if (meteorite.y > height) {
-          meteorite.exists = false;
-        }
-      }
+}
+function draw(){
+  if(state === 'start'){
+    startScreenObj.draw();
+    if(startScreenObj.clicked()){
+      state ='game';
     }
   }
-  // The next code form LIU (328-368)
-  // show the score and lives
-  fill(255, 255, 255);
-  textSize(20);
-  text(`Score: ${score}`, 20, 30);
-  text(`Lives: ${lives}`, 20, 60);
-
-  // game over
-  if (lives <= 0) {
-    noLoop();
-    fill(255, 255, 255);
-    textSize(50);
-    textAlign(CENTER, CENTER);
-    text(
-      `Game Over! 
-Final Score: ${score}`,
-      width / 2,
-      height / 2
-    );
-  }
-}
-// resetaxe
-function resetAxe() {
-  axeX = boardX;
-  axeY = boardY - axeWidth / 2 - 5;
-  dropSpeed = 5;
-  bounceSpeed = 3;
-}
-
-//The next code form LIU
-function reboundAxe(meteorite) {
-  if (axeX < meteorite.x) {
-    bounceSpeed = -Math.abs(bounceSpeed);
-  } else {
-    bounceSpeed = Math.abs(bounceSpeed);
-  }
-  if (axeY < meteorite.y) {
-    dropSpeed = -Math.abs(dropSpeed);
-  } else {
-    dropSpeed = Math.abs(dropSpeed);
-  }
-}
-// The next code form YAN (370 - )
-function draw() {
-  if (state === "start") {
-    startScreen();
-  }
-  if (state === "game") {
+  if(state ==='game'){
     gameScreen();
-  }
-  if (state === "end") {
-    endScreen();
-  }
-  if (state === "win") {
-    winScreen();
-  }
-}
-
-function mouseClicked() {
-  if (
-    state === "start" &&
-    mouseX >= width / 2 - 60 &&
-    mouseX <= width / 2 + 60 &&
-    mouseY >= height / 2 &&
-    mouseY <= height / 2 + 40
-  ) {
-    state = "game";
   }
 }
