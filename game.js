@@ -575,7 +575,7 @@ function endScreen() {
 function resetGame() {
   score = 0;
   lives = 3;
-  state = "start";
+  state = 'start';
   axeObj.x = boardObj.x;
   axeObj.y = boardObj.y - axeObj.width;
   treasures.forEach((treasure) => (treasure.exists = true));
@@ -584,20 +584,19 @@ function resetGame() {
 
 // the next 10 lins of code are from YAN
 function draw() {
-  if (state === "start") {
+  if (state === 'start') {
     startScreenObj.draw();
     if (startScreenObj.clicked()) {
-      state = "game";
+      state = 'game';
     }
   }
-  if (state === "game") {
+  if (state === 'game') {
     gameScreen();
     // the next 7 lins of code are from LIU
     if (lives <= 0) {
-      state = "end";
-      endScreen();
+      state = 'end';
     }
-  } else if (state === "end") {
+  } else if (state === 'end') {
     endScreen();
   }
 }
