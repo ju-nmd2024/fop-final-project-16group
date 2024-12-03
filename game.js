@@ -1,3 +1,4 @@
+// the next 45 lins of code are from YAN 
 class GameBackground{
   constructor(){
     this.starX = [];
@@ -44,6 +45,7 @@ class GameBackground{
   }
 
 }
+// the next 48 lins of code are from YAN 
 class StartScreen{
   constructor(){
     this.alphaValue = 255;
@@ -93,6 +95,7 @@ clicked(){
     }return false;
 }
 }
+// the next 94 lins of code are from YAN 
 class DrawTreasure{
     constructor(x,y){
         this.x = x;
@@ -188,6 +191,7 @@ class DrawTreasure{
     }
  }
 }
+// the next 77 lins of code are from YAN 
 class DrawMeteorit{
   constructor(x,y){
     this.x=x;
@@ -266,6 +270,7 @@ axeTop  < meteoritBottom
   }
 }
 }
+// the next 93 lins of code are from YAN 
 class Axe{
     constructor(){
     this.x = 300;
@@ -360,6 +365,7 @@ moveAxe(){
   }
 } 
 }
+// the next 30 lins of code are from YAN 
 class Board{
   constructor(){
     this.x = width/2;
@@ -392,6 +398,7 @@ class Board{
    }
 }
 //The setup of the treasurechest
+// the next 6 lins of code are from YAN 
 let treasures = [];
 let treasureWidth = 40;
 
@@ -401,7 +408,7 @@ let meteoritWidth = 40;
 let startScreenObj;
 // the state
 let state = 'start';
-
+// the next 36 lins of code are from YAN 
 function setup(){
   createCanvas(800,600);
   frameRate(120);
@@ -439,6 +446,7 @@ boardObj = new Board();
 startScreenObj = new StartScreen();
 startScreenObj.setup();
 }
+// the next 28 lins of code are from YAN 
 function gameScreen(){
 // draw the gamebackgroun and the star
   gameBackgroundObj.drawBackground(400, 500);
@@ -468,6 +476,7 @@ function gameScreen(){
     }
   }
 }
+// the next 10 lins of code are from YAN 
 function draw(){
   if(state === 'start'){
     startScreenObj.draw();
