@@ -34,6 +34,7 @@ class GameBackground {
       ellipse(x - 290 + i * 140, y - 60, 80, 120);
     }
   }
+
   // draw the stars
   drawStars() {
     for (let index in this.starX) {
@@ -398,21 +399,24 @@ class Axe {
       this.y - this.width / 2 <= boardObj.y + 10
     ) {
       this.dropSpeed = this.dropSpeed * -1;
-    //check the left collision
-    }else if (this.x +this.width/2 >= boardObj.x-45 &&
-      this.y + this.width/2 > boardObj.y &&
-      this.y - this.width/2 < boardObj.y +10 &&
-      this.x - this.width/2 < boardObj.x +45
-    ){
+      //check the left collision
+    } else if (
+      this.x + this.width / 2 >= boardObj.x - 45 &&
+      this.y + this.width / 2 > boardObj.y &&
+      this.y - this.width / 2 < boardObj.y + 10 &&
+      this.x - this.width / 2 < boardObj.x + 45
+    ) {
       this.bounceSpeed = -Math.abs(this.bounceSpeed);
     }
-  
-  // check the right collision
-    if (this.x -this.width/2 <= boardObj.x+45 &&
-      this.y + this.width/2 > boardObj.y +2 &&
-      this.y - this.width/2 < boardObj.y +10){
-        this.bounceSpeed = Math.abs(this.bounceSpeed);
-      }
+
+    // check the right collision
+    if (
+      this.x - this.width / 2 <= boardObj.x + 45 &&
+      this.y + this.width / 2 > boardObj.y + 2 &&
+      this.y - this.width / 2 < boardObj.y + 10
+    ) {
+      this.bounceSpeed = Math.abs(this.bounceSpeed);
+    }
     // the next 8 lins of code are from LIU
     //drop reduce lives
     else if (this.y + this.width / 2 >= 600) {
@@ -453,6 +457,7 @@ class Board {
     ellipse(-39, +5, 3);
     pop();
   }
+
   // method to move the board
   moveBoard() {
     if (keyIsDown(39) && this.x + 45 <= 800) {
@@ -478,7 +483,7 @@ let meteoritWidth = 40;
 // use the startScreen
 let startScreenObj;
 // the state
-let state = "game";
+let state = "start";
 // the next 36 lins of code are from YAN
 function setup() {
   createCanvas(800, 600);
