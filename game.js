@@ -557,16 +557,31 @@ function gameScreen() {
     }
   }
 }
-//the next 9 lins of code are from LIU
+//the next 23 lins of code are from LIU
 function endScreen() {
-  background(0, 0, 0);
+  gameBackgroundObj.drawBackground(400, 500);
+  gameBackgroundObj.drawStars();
   fill(255, 255, 255);
   textAlign(CENTER, CENTER);
+  textSize(50);
+  text("Game over!", width / 2, height / 2 - 80);
   textSize(40);
-  text("game over", width / 2, height / 2);
-  textSize(40);
-  text(`Final Score: ${score}`, width / 2, height / 2 + 50);
+  text(`Final Score: ${score}`, width / 2, height / 2 + 40);
+  text("press R to Restart", width / 2, height / 2 + 90);
+  if (key === "r") {
+    resetGame();
+  }
 }
+function resetGame() {
+  score = 0;
+  lives = 3;
+  state = "start";
+  axeObj.x = boardObj.x;
+  axeObj.y = boardObj.y - axeObj.width;
+  treasures.forEach((treasure) => (treasure.exists = true));
+  meteorits.forEach((meteorit) => (meteorit.exists = true));
+}
+
 // the next 10 lins of code are from YAN
 function draw() {
   if (state === "start") {
@@ -577,10 +592,12 @@ function draw() {
   }
   if (state === "game") {
     gameScreen();
-    // the next 4 lins of code are from LIU
+    // the next 7 lins of code are from LIU
     if (lives <= 0) {
       state = "end";
       endScreen();
     }
+  } else if (state === "end") {
+    endScreen();
   }
 }
