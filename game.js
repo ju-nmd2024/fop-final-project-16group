@@ -1,3 +1,4 @@
+// the next 43 lins of code are from YAN
 class GameBackground {
   constructor() {
     this.starX = [];
@@ -42,7 +43,7 @@ class GameBackground {
     }
   }
 }
-// the next 48 lins of code are from YAN
+// the next 50 lins of code are from YAN
 class StartScreen {
   constructor() {
     this.alphaValue = 255;
@@ -94,7 +95,7 @@ class StartScreen {
     return false;
   }
 }
-// the next 94 lins of code are from YAN
+// the next 69 lins of code are from YAN
 class DrawTreasure {
   constructor(x, y) {
     this.x = x;
@@ -316,8 +317,8 @@ class Axe {
   constructor() {
     this.x = 300;
     this.y = 350;
-    this.dropSpeed = 2;
-    this.bounceSpeed = 2;
+    this.dropSpeed = 3;
+    this.bounceSpeed = 3;
     this.width = 20;
     this.angle = 0;
   }
@@ -389,6 +390,7 @@ class Axe {
     this.x += this.bounceSpeed;
     this.y += this.dropSpeed;
     // check the collision
+    // keep the axe go up
     if (
       this.y + this.width / 2 >= boardObj.y &&
       this.x + this.width / 2 >= boardObj.x - 40 &&
@@ -396,7 +398,21 @@ class Axe {
       this.y - this.width / 2 <= boardObj.y + 10
     ) {
       this.dropSpeed = this.dropSpeed * -1;
+    //check the left collision
+    }else if (this.x +this.width/2 >= boardObj.x-45 &&
+      this.y + this.width/2 > boardObj.y &&
+      this.y - this.width/2 < boardObj.y +10 &&
+      this.x - this.width/2 < boardObj.x +45
+    ){
+      this.bounceSpeed = -Math.abs(this.bounceSpeed);
     }
+  
+  // check the right collision
+    if (this.x -this.width/2 <= boardObj.x+45 &&
+      this.y + this.width/2 > boardObj.y +2 &&
+      this.y - this.width/2 < boardObj.y +10){
+        this.bounceSpeed = Math.abs(this.bounceSpeed);
+      }
     // the next 8 lins of code are from LIU
     //drop reduce lives
     else if (this.y + this.width / 2 >= 600) {
@@ -462,11 +478,11 @@ let meteoritWidth = 40;
 // use the startScreen
 let startScreenObj;
 // the state
-let state = "start";
+let state = "game";
 // the next 36 lins of code are from YAN
 function setup() {
   createCanvas(800, 600);
-  frameRate(120);
+  frameRate(60);
   // setup the gamebackgroun and the stars
   gameBackgroundObj = new GameBackground();
   gameBackgroundObj.setup(); //set the stars
