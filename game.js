@@ -67,8 +67,9 @@ class StartScreen {
     this.alphaValue = Math.abs(Math.sin(frameCount * flickerSpeed)) * 255;
     fill(255, 215, 0, this.alphaValue);
     textStyle(BOLDITALIC);
+    textAlign(CENTER, CENTER);
     textSize(50);
-    text("Treasure hunt in the jungle", 100, height / 3);
+    text("Treasure hunt in the jungle", width / 2, height / 3);
 
     // the start button
     fill(255, 255, 255);
@@ -76,10 +77,11 @@ class StartScreen {
     strokeWeight(2);
     rect(width / 2 - 60, height / 2, 120, 40, 20);
     fill(23, 255, 100);
+    textAlign(CENTER, CENTER);
     textSize(30);
     stroke(100, 100, 100);
     strokeWeight(5);
-    text("Start", width / 2 - 35, height / 2 + 31);
+    text("Start", width / 2, height / 2 + 20);
   }
 
   // check the clicked
@@ -169,6 +171,7 @@ class DrawTreasure {
       this.exists = false;
       // the next 2 lins of code are from LIU
       score += 1;
+      return;
       // check the  bottom collision
     } else if (
       axeTop <= treasureBottom &&
@@ -180,6 +183,7 @@ class DrawTreasure {
       this.exists = false;
       // the next 2 lins of code are from LIU
       score += 1;
+      return;
     }
     // check the  left collision
     if (
@@ -196,6 +200,7 @@ class DrawTreasure {
       this.exists = false;
       // the next 2 lins of code are from LIU
       score += 1;
+      return;
     }
     // check the  right collision
     else if (
@@ -208,6 +213,7 @@ class DrawTreasure {
       this.exists = false;
       // the next 2 lins of code are from LIU
       score += 1;
+      return;
     }
   }
 }
@@ -541,12 +547,13 @@ function gameScreen() {
       }
     }
   }
-  //the next 5 lins of code are from LIU
+  //the next 6 lins of code are from LIU
   //draw the score and lives
   fill(255, 255, 255);
+  textAlign(CENTER, CENTER);
   textSize(20);
-  text(`Score: ${score}`, 20, 30);
-  text(`Lives: ${lives}`, 20, 60);
+  text(`Score: ${score}`, 50, 30);
+  text(`Lives: ${lives}`, 50, 60);
   //draw the metrorits
   for (let i = 0; i < meteorits.length; i++) {
     if (meteorits[i].exists) {
@@ -557,7 +564,7 @@ function gameScreen() {
     }
   }
 }
-//the next 23 lins of code are from LIU
+//the next 48 lins of code are from LIU
 function endScreen() {
   gameBackgroundObj.drawBackground(400, 500);
   gameBackgroundObj.drawStars();
@@ -573,30 +580,58 @@ function endScreen() {
   }
 }
 function resetGame() {
+  //reset score and lives
   score = 0;
   lives = 3;
-  state = 'start';
+  state = "start";
+  //rest axe
   axeObj.x = boardObj.x;
   axeObj.y = boardObj.y - axeObj.width;
-  treasures.forEach((treasure) => (treasure.exists = true));
-  meteorits.forEach((meteorit) => (meteorit.exists = true));
+  axeObj.dropSpeed = 2;
+  axeObj.bounceSpeed = 2;
+  axeObj.angle = 0;
+  //rest treasures and meteorits
+  treasures = [];
+  meteorits = [];
+  let meteoritX = 150;
+  let meteoritY = 100;
+  let startX = 100;
+  let startY = 100;
+  let gap = 100;
+  let rawGap = 50;
+  let rows = 4;
+  let cols = 7;
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      let x = startX + col * gap;
+      let y = startY + row * rawGap;
+      let exists = true;
+      treasures.push(new DrawTreasure(x, y));
+    }
+    for (let col = 0; col < cols; col++) {
+      let x = meteoritX + col * gap;
+      let y = meteoritY + row * rawGap;
+      meteorits.push(new DrawMeteorit(x, y));
+    }
+  }
 }
 
 // the next 10 lins of code are from YAN
 function draw() {
-  if (state === 'start') {
+  if (state === "start") {
     startScreenObj.draw();
     if (startScreenObj.clicked()) {
-      state = 'game';
+      state = "game";
     }
   }
-  if (state === 'game') {
+  if (state === "game") {
     gameScreen();
     // the next 7 lins of code are from LIU
     if (lives <= 0) {
-      state = 'end';
+      state = "end";
+      endScreen();
     }
-  } else if (state === 'end') {
+  } else if (state === "end") {
     endScreen();
   }
 }
