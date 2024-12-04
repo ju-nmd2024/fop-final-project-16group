@@ -587,8 +587,8 @@ function resetGame() {
   //rest axe
   axeObj.x = boardObj.x;
   axeObj.y = boardObj.y - axeObj.width;
-  axeObj.dropSpeed = 2;
-  axeObj.bounceSpeed = 2;
+  axeObj.dropSpeed = 3;
+  axeObj.bounceSpeed = 3;
   axeObj.angle = 0;
   //rest treasures and meteorits
   treasures = [];
