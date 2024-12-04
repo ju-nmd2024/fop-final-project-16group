@@ -304,9 +304,9 @@ class DrawMeteorit {
       axeBottom > meteoritTop
     ) {
       this.isFalling = true;
-      // the next 11 lins of code are from LIU
       axeObj.bounceSpeed = Math.abs(axeObj.bounceSpeed);
     }
+    // the next 9 lins of code are from LIU
     if (
       this.y + this.width / 2 >= boardObj.y &&
       this.y + this.width / 2 <= boardObj.y + 10 &&
@@ -554,6 +554,8 @@ function gameScreen() {
   textSize(20);
   text(`Score: ${score}`, 50, 30);
   text(`Lives: ${lives}`, 50, 60);
+
+  // the next 6 lins of code are from YAN
   //draw the metrorits
   for (let i = 0; i < meteorits.length; i++) {
     if (meteorits[i].exists) {
