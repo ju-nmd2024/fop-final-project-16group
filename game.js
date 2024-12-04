@@ -429,8 +429,8 @@ class Axe {
       lives -= 1;
       this.x = boardObj.x;
       this.y = boardObj.y - this.width;
-      this.dropSpeed = 2;
-      this.bounceSpeed = 2;
+      this.dropSpeed = 3;
+      this.bounceSpeed = 3;
     }
     // keep the axe inside the game
     if (this.y <= 0) {
@@ -615,7 +615,6 @@ function resetGame() {
     }
   }
 }
-
 // the next 10 lins of code are from YAN
 function draw() {
   if (state === "start") {
