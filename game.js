@@ -566,18 +566,36 @@ function gameScreen() {
     }
   }
 }
-//the next 48 lins of code are from LIU
+//the next 67 lins of code are from LIU
 function endScreen() {
   gameBackgroundObj.drawBackground(400, 500);
   gameBackgroundObj.drawStars();
   fill(255, 255, 255);
+  textStyle(BOLDITALIC);
   textAlign(CENTER, CENTER);
   textSize(50);
-  text("Game over!", width / 2, height / 2 - 80);
+  text("☠️ Game over! ☠️", width / 2, height / 2 - 90);
   textSize(40);
-  text(`Final Score: ${score}`, width / 2, height / 2 + 40);
-  text("press R to Restart", width / 2, height / 2 + 90);
-  if (key === "r") {
+  text(`Final Score: ${score}`, width / 2, height / 2 + 10);
+  text("Press' R' to Restart", width / 2, height / 2 + 60);
+}
+function winScreen() {
+  gameBackgroundObj.drawBackground(400, 500);
+  gameBackgroundObj.drawStars();
+  fill(255, 255, 255);
+  textStyle(BOLDITALIC);
+  textAlign(CENTER, CENTER);
+  textSize(50);
+  text("👑 You Win! 👑", width / 2, height / 2 - 90);
+  textSize(40);
+  text(`Final Score: ${score}`, width / 2, height / 2 + 10);
+  text("Press 'SPACE' to Restart", width / 2, height / 2 + 60);
+}
+function keyPressed() {
+  if (state === "end" && key === "r") {
+    resetGame();
+  }
+  if (state === "win" && key === " ") {
     resetGame();
   }
 }
@@ -627,12 +645,14 @@ function draw() {
   }
   if (state === "game") {
     gameScreen();
-    // the next 7 lins of code are from LIU
+    // the next 10 lins of code are from LIU
     if (lives <= 0) {
       state = "end";
       endScreen();
     }
-  } else if (state === "end") {
-    endScreen();
+  }
+  if (score == 20) {
+    state = "win";
+    winScreen();
   }
 }
