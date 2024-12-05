@@ -70,7 +70,15 @@ class StartScreen {
     textAlign(CENTER, CENTER);
     textSize(50);
     text("Treasure hunt in the jungle", width / 2, height / 3);
-
+    textSize(20);
+    text(" Use the  ← and → to move the board", width / 2, 400);
+    text(" If the axe heat the ground you will lost a live", width / 2, 450);
+    text(
+      " Heat the treasurechest to win the score, 20 will win! ",
+      width / 2,
+      500
+    );
+    text(" Avoid meteorites ! ", width / 2, 550);
     // the start button
     fill(255, 255, 255);
     stroke(100, 200, 200);
